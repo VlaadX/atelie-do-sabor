@@ -36,7 +36,15 @@
     return dates;
   }
   const nextStart = (batchId, reference = new Date()) => upcomingStarts(batchId, reference, 1)[0] || null;
-  const api = { nextStart, upcomingStarts, courses: COURSES, batches: BATCHES };
+  function refundDeadline(startISO) {
+    if (typeof startISO !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(startISO)) return null;
+    const date = new Date(`${startISO}T12:00:00Z`);
+    if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== startISO) return null;
+    date.setUTCDate(date.getUTCDate() - 7);
+    const iso = date.toISOString().slice(0, 10);
+    return { iso, display: displayDate(iso) };
+  }
+  const api = { nextStart, upcomingStarts, refundDeadline, courses: COURSES, batches: BATCHES };
   globalThis.AtelieForm = api;
   if (typeof document === 'undefined') return;
 
@@ -93,6 +101,15 @@
     input('food-consent-wrap').hidden = !visible;
     input('food-consent').disabled = !visible;
     input('food-consent').required = visible;
+    const consentText = isKids()
+      ? 'Como responsável, autorizo o uso das informações alimentares informadas para a dupla (criança e responsável) apenas nesta simulação de organização das aulas.'
+      : (hasGuardian()
+        ? 'Como responsável, autorizo o uso das informações alimentares do participante apenas nesta simulação de organização das aulas.'
+        : 'Autorizo o uso das minhas informações alimentares apenas nesta simulação de organização das aulas.');
+    const requirementText = '(Obrigatório ao informar restrições)';
+    if (input('food-consent-label').textContent !== `${consentText} ${requirementText}`) {
+      input('food-consent-label').replaceChildren(document.createTextNode(`${consentText} `), node('strong', requirementText));
+    }
     if (!visible) clearFieldError(input('food-consent'));
     if (visible && wasHidden && currentStep === 2) announce('Uma autorização específica para as informações alimentares foi adicionada abaixo do campo.');
   }
@@ -151,6 +168,15 @@
       ? `4 × ${money(selected.installment)} no cartão (total ${money(selected.installment * 4)}) ${selected.units}`
       : `${money(selected.cash)} à vista ${selected.units}`;
   }
+  function refundText() {
+    const deadline = refundDeadline(value('start'));
+    if (!deadline) return 'Até 7 dias antes do início.';
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(new Date()).map(part => [part.type, part.value]));
+    const today = `${parts.year}-${parts.month}-${parts.day}`;
+    return `Até ${deadline.display} (7 dias antes do início).${deadline.iso < today ? ' Para este início, o prazo de reembolso integral já passou.' : ''}`;
+  }
   function updateChoiceNote() {
     const note = input('choice-note');
     const selected = course();
@@ -165,6 +191,7 @@
       const p = node('p');
       p.append(node('strong', `Início em ${displayDate(value('start'))}. `), document.createTextNode(`${batch().schedule}. Duração: ${batch().duration}.`));
       note.append(p);
+      note.append(node('p', `Reembolso integral: ${refundText()}`));
     }
   }
   function updateDates(keepSelection = true) {
@@ -266,8 +293,10 @@
     hideErrors();
     if (!errors.length) return true;
     if (errors.length === 1) {
-      if (focus) errors[0].field.focus();
-      announce(`Confira o campo. ${errors[0].message}`);
+      if (focus) {
+        if (document.activeElement === errors[0].field) announce(`Confira o campo. ${errors[0].message}`);
+        else errors[0].field.focus();
+      }
     } else {
       for (const { field, message } of errors) {
         const li = node('li');
@@ -315,11 +344,13 @@
     target.replaceChildren();
     addReviewBlock(target, 'Sua turma', [
       ['Curso', course().name], ['Turma', batch().name], ['Horário', batch().schedule],
-      ['Início', displayDate(value('start'))], ['Duração', batch().duration], ['Valor', paymentText()]
+      ['Início', displayDate(value('start'))], ['Duração', batch().duration], ['Valor', paymentText()],
+      ['Reembolso integral', refundText()]
     ], editable ? 1 : null);
     const people = [['Participante', `${value('name')}, ${value('age')} anos`]];
     if (hasGuardian()) people.push([isKids() ? 'Responsável que cozinha junto' : 'Responsável', value('guardian')]);
-    people.push([value('contact-method') === 'email' ? 'E-mail' : 'WhatsApp', value(value('contact-method') === 'email' ? 'email' : 'phone')]);
+    const contactLabel = `${value('contact-method') === 'email' ? 'E-mail' : 'WhatsApp'} ${hasGuardian() ? 'do responsável' : 'do participante'}`;
+    people.push([contactLabel, value(value('contact-method') === 'email' ? 'email' : 'phone')]);
     people.push(['Alergias e restrições do participante', value('food') || 'Não informadas']);
     if (isKids()) people.push(['Alergias e restrições do responsável', value('guardian-food') || 'Não informadas']);
     addReviewBlock(target, 'Quem participa', people, editable ? 2 : null);
