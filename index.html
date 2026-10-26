@@ -7,10 +7,10 @@
   <meta name="description" content="Aprenda a cozinhar do zero ou compartilhe a cozinha com as crianças. Conheça os cursos presenciais do Ateliê do Sabor. Projeto demonstrativo.">
   <title>Ateliê do Sabor — Cursos de culinária para começar</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="form.css">
-  <script src="form.js" defer></script>
-  <script src="main.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261026-final">
+  <link rel="stylesheet" href="form.css?v=20261026-final">
+  <script src="form.js?v=20261026-final" defer></script>
+  <script src="main.js?v=20261026-final" defer></script>
 </head>
 <body id="inicio">
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -41,7 +41,7 @@
       </div>
       <figure class="hero-figure">
         <div class="photo-frame"><img src="assets/hero-cozinha.webp" srcset="assets/hero-cozinha-640.webp 640w, assets/hero-cozinha.webp 1122w" sizes="(max-width: 760px) 90vw, 44vw" alt="Mãos abrindo massa fresca com um rolo de madeira, entre farinha, tomates e manjericão." width="1122" height="1402" fetchpriority="high"><div class="photo-stamp" aria-hidden="true"><svg viewBox="0 0 40 35" width="36" height="32" fill="none"><path d="M5 17h30c-1 10-6 15-15 15S6 27 5 17ZM14 11c-4-4 4-5 0-9M24 11c-4-4 4-5 0-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Feito por você. <br>Compartilhado <br>com carinho.</span></div></div>
-        <figcaption>Imagem ilustrativa criada com IA.</figcaption>
+        <figcaption>Imagem ilustrativa criada com inteligência artificial (<abbr title="inteligência artificial">IA</abbr>).</figcaption>
       </figure>
     </section>
     <div class="promise-strip"><div class="container promise-inner"><p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Não precisa ter experiência</p><p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10l2 12H5L7 8Zm2 0V5a3 3 0 0 1 6 0v3"/></svg>Ingredientes e avental inclusos</p><p><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2M4 5a3 3 0 0 0 0 6M20 5a3 3 0 0 1 0 6"/></svg>Aprendizado em pequenos grupos</p></div></div>
@@ -203,7 +203,7 @@
                 <p id="form-email-error" class="form-field-error" hidden></p>
               </div>
               <div class="form-field" id="form-phone-wrap" hidden>
-                <label for="form-phone">WhatsApp com DDD <span>(obrigatório)</span></label>
+                <label for="form-phone">WhatsApp com código de área (<abbr title="Discagem Direta a Distância">DDD</abbr>) <span>(obrigatório)</span></label>
                 <p id="form-phone-hint" class="form-hint">Aceita números com ou sem espaços, parênteses e hífen. Use um número fictício, por exemplo (11) 90000-0000.</p>
                 <input id="form-phone" name="phone" type="tel" inputmode="tel" autocomplete="section-contact tel" maxlength="24" required disabled aria-describedby="form-phone-hint form-phone-error">
                 <p id="form-phone-error" class="form-field-error" hidden></p>
@@ -214,7 +214,7 @@
               <p id="form-food-hint" class="form-hint">Em uma inscrição real, estas informações ajudariam a planejar os ingredientes. Aqui, use apenas exemplos fictícios e informe somente o necessário. Se não houver alergias ou restrições, deixe os campos em branco.</p>
               <div class="form-field">
                 <label for="form-food">Do participante <span>(opcional)</span></label>
-                <textarea id="form-food" name="participantFood" rows="3" maxlength="600" autocomplete="off" aria-describedby="form-food-hint" placeholder="Ex.: alergia a amendoim. Se não houver, deixe em branco."></textarea>
+                <textarea id="form-food" name="participantFood" rows="3" maxlength="600" autocomplete="off" aria-describedby="form-food-hint" placeholder="Ex.: alergia a amendoim."></textarea>
               </div>
               <div class="form-field" id="form-guardian-food-wrap" hidden>
                 <label for="form-guardian-food">Do responsável que também cozinha <span>(opcional)</span></label>

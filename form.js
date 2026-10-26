@@ -60,6 +60,7 @@
   let currentStep = 1;
   let completing = false;
   let liveTimer;
+  let foodConsentScope = null;
   const activePointers = new Set();
   const pendingBlurValidation = new Set();
   let blurValidationTimer;
@@ -98,6 +99,15 @@
   function updateFoodConsent() {
     const visible = foodProvided();
     const wasHidden = input('food-consent-wrap').hidden;
+    const scope = isKids() ? 'dupla' : (hasGuardian() ? 'responsavel' : 'adulto');
+    const scopeChanged = foodConsentScope !== null && foodConsentScope !== scope;
+    // A previous person's authorization cannot authorize a different scope.
+    // Keep the dietary information so the user can review it without retyping.
+    if (scopeChanged) {
+      input('food-consent').checked = false;
+      clearFieldError(input('food-consent'));
+    }
+    foodConsentScope = scope;
     input('food-consent-wrap').hidden = !visible;
     input('food-consent').disabled = !visible;
     input('food-consent').required = visible;

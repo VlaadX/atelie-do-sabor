@@ -38,7 +38,7 @@
 .form-error-summary h3 { font-size: 1.125rem; margin: 0 0 .5rem; }
 .form-error-summary p { margin: 0 0 .5rem; }
 .form-error-summary ul { margin: .5rem 0 0; padding-left: 1.2rem; }
-.form-error-summary a { color: #9d302a; display: inline-block; padding: .3rem 0; text-decoration: underline; text-underline-offset: .2em; }
+.form-error-summary a { color: #9d302a; display: inline-flex; align-items: center; min-height: 44px; padding: .3rem 0; text-decoration: underline; text-underline-offset: .2em; }
 .form-choice-note, .form-review-terms { padding: 1.1rem 1.25rem; background: #eceee2; border-radius: .4rem; margin: 1rem 0 1.5rem; }
 .form-choice-note p, .form-review-terms p { margin: 0; }
 .form-choice-note p + p, .form-review-terms p + p { margin-top: .5rem; }
